@@ -32,6 +32,24 @@ productRouter.get("/", async (req, res, next) => {
   }
 });
 
+// GET PRODUCT SINGLE PRODUCT
+productRouter.get("/:productId", async (req, res, next) => {
+  try {
+    const id = req.params.productId;
+    const product = await ProductModel.findById(id);
+
+    if (product) {
+      res.send(product);
+    } else {
+      const error = new Error();
+      error.httpStatusCode = 404;
+      next(error);
+    }
+  } catch (error) {
+    console.log(error);
+    next("Something went wrong!");
+  }
+});
 // EDIT PRODUCT
 productRouter.put("/:id", async (req, res, next) => {
   try {
