@@ -18,7 +18,7 @@ const server = express();
 const port = process.env.port;
 
 // ROUTES
-server.use("./products", ProductRouter);
+server.use("/products", ProductRouter);
 
 // EROR HANDLERS
 server.use(notFoundHandler);
