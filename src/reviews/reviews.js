@@ -37,4 +37,46 @@ reviewRouter.get("/:productId", async (req, res, next) => {
     next(error);
   }
 });
+
+// EDIT A REVIEW
+reviewRouter.put("/:productId/:reviewId", async (req, res, next) => {
+  try {
+    const { comments } = await ProductModel.findOne(
+      {
+        _id: mongoose.Types.ObjectId(req.params.productId),
+      },
+      {
+        _id: 0,
+        comments: {
+          $elemMatch: { _id: mongoose.Types.ObjectId(req.params.reviewId) },
+        },
+      }
+    );
+    const selectedComment = comments[0].toObject();
+
+    if (comments && comments.length > 0) {
+      const comment = { ...selectedComment, ...req.body };
+
+      modifiedProduct = await ProductModel.findOneAndUpdate(
+        {
+          _id: mongoose.Types.ObjectId(req.params.productId),
+          "comments._id": mongoose.Types.ObjectId(req.params.reviewId),
+        },
+        {
+          $set: { "comments.$": comment },
+        },
+        {
+          runValidators: true,
+          new: true,
+        }
+      );
+      res.send(modifiedProduct);
+    } else {
+      next();
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
 module.exports = reviewRouter;
