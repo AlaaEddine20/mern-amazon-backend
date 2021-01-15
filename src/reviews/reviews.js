@@ -52,28 +52,32 @@ reviewRouter.put("/:productId/:reviewId", async (req, res, next) => {
         },
       }
     );
-    const selectedComment = comments[0].toObject();
+    const oldComment = comments[0].toObject();
+    console.log(oldComment);
+    const modifiedComment = { ...oldComment, ...req.body };
 
     if (comments && comments.length > 0) {
-      const comment = { ...selectedComment, ...req.body };
-
-      modifiedProduct = await ProductModel.findOneAndUpdate(
-        {
-          _id: mongoose.Types.ObjectId(req.params.productId),
-          "comments._id": mongoose.Types.ObjectId(req.params.reviewId),
-        },
-        {
-          $set: { "comments.$": comment },
-        },
-        {
-          runValidators: true,
-          new: true,
-        }
-      );
-      res.send(modifiedProduct);
-    } else {
-      next();
     }
+    res.send("ok");
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+// DELETE REVIEW
+reviewRouter.delete("/:productId/:reviewId", async (req, res, next) => {
+  try {
+    const modifiedProduct = await ProductModel.findByIdAndUpdate(
+      req.params.productId,
+      {
+        $pull: {
+          comments: { _id: mongoose.Types.ObjectId(req.params.reviewId) },
+        },
+      },
+      { new: true }
+    );
+    res.send("DELETED");
   } catch (error) {
     console.log(error);
     next(error);
