@@ -27,7 +27,7 @@ const ProductModel = new Schema(
       type: String,
       required: true,
     },
-    comments: { type: Schema.Types.ObjectId, ref: "Reviews" },
+    comments: [{ type: Schema.Types.ObjectId, ref: "Reviews" }],
   },
   { timestamps: true }
 );

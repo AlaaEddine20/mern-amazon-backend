@@ -27,7 +27,7 @@ server.use(cors());
 
 // ROUTES
 server.use("/products", ProductRouter);
-server.use("/reviews", reviewRouter);
+server.use("/product/reviews", reviewRouter);
 // ERROR HANDLERS
 server.use(notFoundHandler);
 server.use(badRequestHandler);
