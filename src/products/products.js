@@ -5,10 +5,10 @@ const mongoose = require("mongoose");
 const ProductModel = require("./schema");
 
 // PRODUCT ROUTER
-const router = express.Router();
+const productRouter = express.Router();
 
 // POST PRODUCT
-router.post("/", async (req, res, next) => {
+productRouter.post("/", async (req, res, next) => {
   try {
     const newProduct = new ProductModel(req.body);
     const { _id } = await newProduct.save();
@@ -21,7 +21,7 @@ router.post("/", async (req, res, next) => {
 });
 
 // GET ALL PRODUCTS
-router.get("/", async (req, res, next) => {
+productRouter.get("/", async (req, res, next) => {
   try {
     const products = await ProductModel.find({}).populate("comments");
 
@@ -31,3 +31,5 @@ router.get("/", async (req, res, next) => {
     next(error);
   }
 });
+
+module.exports = productRouter;

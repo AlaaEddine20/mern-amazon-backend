@@ -1,5 +1,6 @@
 const express = require("express");
 const { join } = require("path");
+const cors = require("cors");
 const listEndpoints = require("express-list-endpoints");
 const mongoose = require("mongoose");
 
@@ -12,14 +13,18 @@ const {
 
 // ROUTER
 const ProductRouter = require("./products/products");
+const reviewRouter = require("./reviews/reviews");
 
 const server = express();
 // PORT
-const port = process.env.port;
+const port = process.env.PORT;
+
+server.use(express.json());
+server.use(cors());
 
 // ROUTES
 server.use("/products", ProductRouter);
-
+server.use("/reviews", reviewRouter);
 // EROR HANDLERS
 server.use(notFoundHandler);
 server.use(badRequestHandler);
@@ -29,7 +34,7 @@ console.log(listEndpoints(server));
 
 // CONNECT TO MONGO
 mongoose
-  .connect(process.env.MONGO_DATABASE, {
+  .connect(process.env.MONGO_CONNECTION, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
