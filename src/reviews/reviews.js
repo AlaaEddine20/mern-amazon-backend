@@ -8,7 +8,7 @@ const reviewRouter = express.Router();
 reviewRouter.post("/", async (req, res, next) => {
   try {
     const newReview = new ReviewSchema(req.body);
-    const productId = req.body.comments;
+    const productId = req.body.productID;
     const product = await ProductModel.findByIdAndUpdate(productId, {
       $push: { comments: newReview },
     });

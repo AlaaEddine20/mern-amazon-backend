@@ -17,15 +17,18 @@ const reviewRouter = require("./reviews/reviews");
 
 const server = express();
 // PORT
-const port = process.env.PORT;
+const port = process.env.PORT || 5000;
+const mongo_db = process.env.MONGO_URI;
 
+const staticFolderPath = join(__dirname, "../public");
+server.use(express.static(staticFolderPath));
 server.use(express.json());
 server.use(cors());
 
 // ROUTES
 server.use("/products", ProductRouter);
 server.use("/reviews", reviewRouter);
-// EROR HANDLERS
+// ERROR HANDLERS
 server.use(notFoundHandler);
 server.use(badRequestHandler);
 server.use(genericErrorHandler);
@@ -34,9 +37,10 @@ console.log(listEndpoints(server));
 
 // CONNECT TO MONGO
 mongoose
-  .connect(process.env.MONGO_CONNECTION, {
+  .connect(mongo_db, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
   })
   .then(
     server.listen(port, () => {
